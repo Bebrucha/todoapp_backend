@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -31,6 +32,7 @@ public class UserControllerIT {
     private UserRepository userRepository;
 
     @Test
+    @WithMockUser
     public void testGetUserById() throws Exception {
         UserDAO user = new UserDAO(1L, "Testing", "GoodPassword");
         Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(user));
@@ -45,6 +47,7 @@ public class UserControllerIT {
     }
 
     @Test
+    @WithMockUser
     public void testGetAllUsers() throws Exception {
         UserDAO expectedUser1 = new UserDAO(1L, "Testing", "GoodPassword");
         UserDAO expectedUser2 = new UserDAO(2L, "Testing2", "GoodPassword2");
@@ -62,6 +65,7 @@ public class UserControllerIT {
     }
 
     @Test
+    @WithMockUser
     public void testCreateUser() throws Exception {
         UserDAO user = new UserDAO(1L, "Testing", "GoodPassword");
         Mockito.when(userRepository.save(user)).thenReturn(user);
@@ -77,6 +81,7 @@ public class UserControllerIT {
     }
 
     @Test
+    @WithMockUser
     public void testDeleteUser() throws Exception {
         UserDAO user = new UserDAO(1L, "Testing", "GoodPassword");
         Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(user));
@@ -89,6 +94,7 @@ public class UserControllerIT {
     }
 
     @Test
+    @WithMockUser
     public void testUpdateUser() throws Exception {
 
         UserDAO user = new UserDAO(1L, "Testing", "GoodPassword");

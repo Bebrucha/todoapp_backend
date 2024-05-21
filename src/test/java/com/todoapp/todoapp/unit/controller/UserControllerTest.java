@@ -18,9 +18,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.todoapp.todoapp.business.persistence.UserRepository;
 import com.todoapp.todoapp.business.service.serviceInterface.UserService;
 import com.todoapp.todoapp.model.User;
+import com.todoapp.todoapp.security.JwtAuthenticationFilter;
 import com.todoapp.todoapp.web.controller.UserController;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -40,6 +43,7 @@ import java.util.List;
 import java.util.Optional;
 
 @WebMvcTest(UserController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class UserControllerTest {
 
         public static String URL = "/api/v1/";
@@ -48,6 +52,10 @@ public class UserControllerTest {
         private MockMvc mockMvc;
 
         @MockBean
+        JwtAuthenticationFilter jwtAuthenticationFilter;
+
+        @MockBean
+        @Qualifier("userServiceImpl")
         private UserService userService;
 
         @Autowired

@@ -2,32 +2,50 @@ package com.todoapp.todoapp.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
 @EnableWebSecurity
-public class TodoSecurityConfig extends WebSecurityConfigurerAdapter {
+@RequiredArgsConstructor
+public class TodoSecurityConfig {
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .authorizeRequests()
-                .anyRequest().permitAll()
-                .and()
-                .formLogin().disable()
-                .httpBasic().disable();
-    }
+    private final JwtAuthenticationFilter jwtAuthFilter;
 
+    private final AuthenticationProvider authenticationProvider;
+
+    /**
+     * Configures the security filter chain for the application.
+     *
+     * @param http object to configure the security
+     * @return configured SecurityFilterChain
+     * @throws Exception if an error occurs during configuration
+     */
     @Bean
-    public InMemoryUserDetailsManager inMemoryUserDetailsManager() {
-        UserDetails defaultUser = User.builder().username("default").password("{noop}test123").roles("USER").build();
-        return new InMemoryUserDetailsManager(defaultUser);
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf()
+                .disable()
+                .authorizeRequests()
+                .antMatchers("/api/v1/auth/**")
+                .permitAll()
+                .anyRequest()
+                .authenticated()
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
+
 }

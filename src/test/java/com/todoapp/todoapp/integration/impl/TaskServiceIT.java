@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.todoapp.todoapp.TodoappApplication;
@@ -37,6 +38,7 @@ public class TaskServiceIT {
     private TaskRepository taskRepository;
 
     @Test
+    @WithMockUser
     public void testGetAllTasks() {
 
         TaskDAO expectedTask1 = new TaskDAO(1L, "Learning", "IsAHardProcess", LocalDate.of(2024, 12, 12), 1L, 1L, 1L);
@@ -53,6 +55,7 @@ public class TaskServiceIT {
     }
 
     @Test
+    @WithMockUser
     public void getTaskById() {
 
         TaskDAO expectedTaskDAO = new TaskDAO(1L, "Learning", "IsAHardProcess", LocalDate.of(2024, 12, 12), 1L, 1L, 1L);
@@ -65,6 +68,7 @@ public class TaskServiceIT {
     }
 
     @Test
+    @WithMockUser
     public void saveTask() {
         Task task = new Task(1L, "Learning", "IsAHardProcess", LocalDate.of(2024, 12, 12), 1L, 1L, 1L);
         TaskDAO taskDAO = new TaskDAO(1L, "Learning", "IsAHardProcess", LocalDate.of(2024, 12, 12), 1L, 1L, 1L);
@@ -76,6 +80,7 @@ public class TaskServiceIT {
     }
 
     @Test
+    @WithMockUser
     public void deleteTaskById() {
         Task task = new Task(1L, "Learning", "IsAHardProcess", LocalDate.of(2024, 12, 12), 1L, 1L, 1L);
         TaskDAO taskDAO = new TaskDAO(1L, "Learning", "IsAHardProcess", LocalDate.of(2024, 12, 12), 1L, 1L, 1L);
@@ -87,6 +92,7 @@ public class TaskServiceIT {
     }
 
     @Test
+    @WithMockUser
     public void updateTask() {
 
         Task task = new Task(1L, "UpdatedTitle", "UpdatedDescription", LocalDate.of(2024, 12, 12), 1L, 1L, 1L);

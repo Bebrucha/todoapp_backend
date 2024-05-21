@@ -5,6 +5,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.todoapp.todoapp.business.mapper.UserMapper;
@@ -17,7 +21,7 @@ import lombok.extern.log4j.Log4j2;
 
 @Service
 @Log4j2
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Autowired
     UserRepository userRepository;
@@ -105,6 +109,25 @@ public class UserServiceImpl implements UserService {
         log.info("User with id {} was updated successfully", user.getId());
         return userMapper.userDAOToUser(userDAO);
 
+    }
+
+    /**
+     * Loads a user by their username.
+     *
+     * @param username the username of the user to load
+     * @return the UserDetails object representing the loaded user
+     * @throws UsernameNotFoundException if the user with the specified username is
+     *                                   not found
+     */
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        log.info("Loading user by username {}", username);
+        UserDAO userDAO = userRepository.findByUsername(username);
+        if (userDAO == null) {
+            log.error("User with username {} not found", username);
+            throw new UsernameNotFoundException("User not found");
+        }
+        return userMapper.userDAOToUser(userDAO);
     }
 
 }

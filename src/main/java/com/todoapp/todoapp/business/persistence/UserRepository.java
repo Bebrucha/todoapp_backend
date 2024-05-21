@@ -7,4 +7,5 @@ import com.todoapp.todoapp.business.persistence.DAO.UserDAO;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserDAO, Long> {
+    UserDAO findByUsername(String username);
 }

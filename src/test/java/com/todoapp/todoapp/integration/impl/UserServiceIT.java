@@ -10,8 +10,10 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.todoapp.todoapp.TodoappApplication;
@@ -29,12 +31,14 @@ import static org.mockito.Mockito.verify;
 public class UserServiceIT {
 
     @Autowired
+    @Qualifier("userDetailsService")
     private UserService userService;
 
     @MockBean
     private UserRepository userRepository;
 
     @Test
+    @WithMockUser
     public void testGetUserById() {
 
         UserDAO user = new UserDAO(1L, "Testing", "GoodPassword");
@@ -47,6 +51,7 @@ public class UserServiceIT {
     }
 
     @Test
+    @WithMockUser
     public void testGetAllUsers() {
 
         UserDAO expectedUser1 = new UserDAO(1L, "Testing", "GoodPassword");
@@ -62,6 +67,7 @@ public class UserServiceIT {
     }
 
     @Test
+    @WithMockUser
     public void testSaveUser() {
 
         User user = new User(1L, "Testing", "GoodPassword");
@@ -74,6 +80,7 @@ public class UserServiceIT {
     }
 
     @Test
+    @WithMockUser
     public void findUserById() {
         UserDAO user = new UserDAO(1L, "Testing", "GoodPassword");
         User expectedUser = new User(1L, "Testing", "GoodPassword");
@@ -85,6 +92,7 @@ public class UserServiceIT {
     }
 
     @Test
+    @WithMockUser
     public void deleteUserById() {
         UserDAO user = new UserDAO(1L, "Testing", "GoodPassword");
         given(userRepository.findById(1L)).willReturn(Optional.of(user));
@@ -95,6 +103,7 @@ public class UserServiceIT {
     }
 
     @Test
+    @WithMockUser
     public void updateUser() {
         User user = new User(1L, "Testing", "UpdatedPassword");
         UserDAO userDAO = new UserDAO(1L, "Testing", "UpdatedPassword");
